@@ -2,7 +2,12 @@ package com.virtualightning.library.universalview;
 
 import android.content.Context;
 
-import com.virtualightning.library.universalview.interfaces.IResultBundleGenerator;
+import com.virtualightning.library.universalview.bases.BaseViewPicker;
+import com.virtualightning.library.universalview.interfaces.IUniversalRequestCallback;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by CimZzz on 2018/11/26.<br>
@@ -11,20 +16,21 @@ import com.virtualightning.library.universalview.interfaces.IResultBundleGenerat
  * Description:<br>
  */
 public class Mediator {
-    private final Context context;
-    private final UniversalView universalView;
-    private final RequestResolver presenter;
-    private final InnerState innerState;
-    private final InnerParams innerParams;
 
-    IResultBundleGenerator<?> resultBundleGenerator;
+    final Context context;
+    private final UniversalView universalView;
+    private final UniversalRequestResolver requestResolver;
+    private final InnerState innerState;
+    InnerParams innerParams;
+    InnerDataBundle innerDataBundle;
 
     public Mediator(Context context, UniversalView universalView) {
         this.context = context;
         this.universalView = universalView;
-        this.presenter = new RequestResolver(this);
+        this.requestResolver = new UniversalRequestResolver(this);
         this.innerState = new InnerState();
         this.innerParams = new InnerParams();
+        this.innerDataBundle = new InnerDataBundle();
     }
 
 
@@ -33,8 +39,12 @@ public class Mediator {
         this.universalView.checkState(viewState);
     }
 
-
+    public boolean isAllowPullRefresh() {
+        return innerParams.isAllowPullRefresh;
+    }
 
     /*内部使用参数*/
+    BaseViewPicker viewPicker;
 
+    /*内部使用数据*/
 }

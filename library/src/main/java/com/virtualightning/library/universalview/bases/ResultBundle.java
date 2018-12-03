@@ -7,12 +7,16 @@ package com.virtualightning.library.universalview.bases;
  * Description:<br>
  */
 public class ResultBundle {
-    int syncCode;
-    int refreshType;
+    private int syncCode;
+    private int refreshType;
 
-    int refreshAllCode;
-    int refreshContentCode;
-    int refreshPageCode;
+    private int refreshAllCode;
+    private int refreshContentCode;
+    private int refreshPageCode;
+
+    private boolean isInterrupt;
+
+    private int pageNum;
 
     public void setSyncCode(int syncCode) {
         this.syncCode = syncCode;
@@ -32,5 +36,13 @@ public class ResultBundle {
 
     public void setRefreshPageCode(int refreshPageCode) {
         this.refreshPageCode = refreshPageCode;
+    }
+
+    public void setInterrupt(boolean interrupt) {
+        isInterrupt = interrupt;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 }

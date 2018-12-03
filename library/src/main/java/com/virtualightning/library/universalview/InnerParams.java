@@ -1,5 +1,13 @@
 package com.virtualightning.library.universalview;
 
+import com.virtualightning.library.universalview.bases.BaseViewPicker;
+import com.virtualightning.library.universalview.interfaces.ILayoutManagerGenerator;
+import com.virtualightning.library.universalview.interfaces.ISplitDecorationGenerator;
+import com.virtualightning.library.universalview.interfaces.IUniversalRequestCallback;
+
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Created by CimZzz on 2018/11/26.<br>
  * Project Name : UniversalView<br>
@@ -7,6 +15,19 @@ package com.virtualightning.library.universalview;
  * Description:<br>
  */
 class InnerParams {
+    /*Callback*/
+    ISplitDecorationGenerator splitDecorationGenerator;
+    IUniversalRequestCallback universalRequestCallback;
+    ILayoutManagerGenerator layoutManagerGenerator;
+
+
+
+    /*Values*/
     boolean isRefreshAllInterrupt;
     boolean isRefreshContentInterrupt;
+    boolean isAllowPullRefresh;
+
+    int layoutType;
+
+    int pageNum;
 }

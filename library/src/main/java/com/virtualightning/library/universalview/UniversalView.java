@@ -8,7 +8,13 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
+
+import com.virtualightning.library.universalview.interfaces.IErrorViewGenerator;
+import com.virtualightning.library.universalview.interfaces.ILoadingViewGenerator;
+import com.virtualightning.library.universalview.views.CustomCoordinatorLayout;
 
 /**
  * Created by CimZzz on 2018/11/26.<br>
@@ -17,6 +23,13 @@ import android.widget.FrameLayout;
  * Description:<br>
  */
 public class UniversalView extends FrameLayout {
+    private IErrorViewGenerator errorViewGenerator;
+    private ILoadingViewGenerator loadingViewGenerator;
+
+    private View loadingView;
+    private View errorView;
+    private CustomCoordinatorLayout rootView;
+
     private Mediator mediator;
 
     public UniversalView(@NonNull Context context) {
@@ -46,6 +59,13 @@ public class UniversalView extends FrameLayout {
         mediator = new Mediator(context, this);
     }
 
+    private void initUniversalView(UniversalBuilder builder) {
+        this.errorViewGenerator = builder.errorViewGenerator;
+        this.loadingViewGenerator = builder.loadingViewGenerator;
+
+
+    }
+
     /*控件显示方法*/
     void checkState(int viewState) {
         switch (viewState) {
@@ -68,10 +88,16 @@ public class UniversalView extends FrameLayout {
     }
 
     private void showLoadingView() {
-        if(loadingView == null)
+        if(loadingView == null) {
             //init loading view
-            loadingView = ViewUtils.inflateView(this, R.layout.view_loading);
+            if(loadingViewGenerator == null)
+                return;
 
+            loadingView = loadingViewGenerator.generateLoadingView(this);
+
+            if(loadingView == null)
+                return;
+        }
         if(loadingView.getParent() != null)
             return;
 
@@ -89,9 +115,16 @@ public class UniversalView extends FrameLayout {
     }
 
     private void showErrorView() {
-        if(errorView == null)
-            //init loading view
-            errorView = ViewUtils.inflateView(this, R.layout.view_error);
+        if(errorView == null) {
+            //init error view
+            if(errorViewGenerator == null)
+                return;
+
+            errorView = errorViewGenerator.generateErrorView(this);
+
+            if(errorView == null)
+                return;
+        }
 
 
         if(errorView.getParent() != null)
@@ -110,33 +143,14 @@ public class UniversalView extends FrameLayout {
         removeView(errorView);
     }
 
+    private void showContentView() {
+
+    }
+
     private void initContentView() {
         if(rootView == null) {
-            rootView = ViewUtils.inflateView(this, R.layout.view_goods_content);
-
-            //header
-            goodsHeader = rootView.findViewById(R.id.goodsHeader);
-            goodsHeader.setAdapter(goodsHeaderAdapter = new GoodsHeaderAdapter(this.goodsVariableState,
-                    this.goodsViewPicker,
-                    this.goodsAdapterCallback));
-            this.goodsVariableState.goodsHeaderAdapter = this.goodsHeaderAdapter;
-
-            //list
-            goodsList = rootView.findViewById(R.id.goodsList);
-            goodsList.setAdapter(goodsContentAdapter = new GoodsContentAdapter(this.goodsVariableState,
-                    this.goodsViewPicker,
-                    this.goodsAdapterCallback));
-            goodsList.addItemDecoration(new GridSplitDecoration(getContext()));
-            GridLayoutManager manager = new GridLayoutManager(getContext(), 2);
-            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    return goodsContentAdapter.getSpanSize(position);
-                }
-            });
-            goodsList.setLayoutManager(manager);
-
-            this.goodsVariableState.goodsContentAdapter = this.goodsContentAdapter;
+            rootView = (CustomCoordinatorLayout) LayoutInflater.from(this.mediator.context).inflate(R.layout.view_universal_view_content, this, false);
+            rootView.setAllowRefresh(this.mediator.innerParams.isAllowPullRefresh);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.virtualightning.library.universalview.interfaces;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Created by CimZzz on 2018/11/26.<br>
@@ -9,5 +10,5 @@ import android.view.View;
  * Description:<br>
  */
 public interface IErrorViewGenerator {
-    View generateErrorView(View.OnClickListener onErrorClickListener);
+    View generateErrorView(ViewGroup parent);
 }

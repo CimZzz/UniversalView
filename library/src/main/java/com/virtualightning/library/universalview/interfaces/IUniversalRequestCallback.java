@@ -8,6 +8,11 @@ import com.virtualightning.library.universalview.bases.ResultBundle;
  * Since : UniversalView_0.0.1<br>
  * Description:<br>
  */
-public interface IResultBundleGenerator<T extends ResultBundle> {
+public interface IUniversalRequestCallback<T extends ResultBundle> {
     T generateResultBundle();
+
+    void doRequest(int refreshType, T resultBundle);
+
+
+    void cancelRequest(int refreshType);
 }

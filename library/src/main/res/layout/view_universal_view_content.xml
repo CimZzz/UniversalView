@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.virtualightning.library.universalview.views.CustomCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.yiqimmm.apps.android.base.widgets.goods.LazyLoadAppbarLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/contentList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
+</com.virtualightning.library.universalview.views.CustomCoordinatorLayout>

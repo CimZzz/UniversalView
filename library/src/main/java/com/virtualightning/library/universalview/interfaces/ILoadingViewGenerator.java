@@ -1,6 +1,7 @@
 package com.virtualightning.library.universalview.interfaces;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 /**
@@ -9,6 +10,6 @@ import android.widget.FrameLayout;
  * Since : UniversalView_0.0.1<br>
  * Description:<br>
  */
-public interface ILoadingViewGenterator {
-    View generateLoadingView(FrameLayout parent);
+public interface ILoadingViewGenerator {
+    View generateLoadingView(ViewGroup parent);
 }
