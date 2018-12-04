@@ -3,11 +3,12 @@ package com.virtualightning.library.universalview;
 import android.content.Context;
 
 import com.virtualightning.library.universalview.bases.BaseViewPicker;
+import com.virtualightning.library.universalview.bases.BaseDataBundle;
+import com.virtualightning.library.universalview.interfaces.IDataUpdateVisitor;
+import com.virtualightning.library.universalview.interfaces.ILayoutManagerGenerator;
+import com.virtualightning.library.universalview.interfaces.IPreloadStrategyGenerator;
+import com.virtualightning.library.universalview.interfaces.ISplitDecorationGenerator;
 import com.virtualightning.library.universalview.interfaces.IUniversalRequestCallback;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by CimZzz on 2018/11/26.<br>
@@ -22,7 +23,7 @@ public class Mediator {
     private final UniversalRequestResolver requestResolver;
     private final InnerState innerState;
     InnerParams innerParams;
-    InnerDataBundle innerDataBundle;
+    IViewMode viewMode;
 
     public Mediator(Context context, UniversalView universalView) {
         this.context = context;
@@ -30,7 +31,6 @@ public class Mediator {
         this.requestResolver = new UniversalRequestResolver(this);
         this.innerState = new InnerState();
         this.innerParams = new InnerParams();
-        this.innerDataBundle = new InnerDataBundle();
     }
 
 
@@ -45,6 +45,11 @@ public class Mediator {
 
     /*内部使用参数*/
     BaseViewPicker viewPicker;
-
+    ISplitDecorationGenerator splitDecorationGenerator;
+    IUniversalRequestCallback universalRequestCallback;
+    ILayoutManagerGenerator layoutManagerGenerator;
+    IPreloadStrategyGenerator preloadStrategyGenerator;
+    IDataUpdateVisitor dataUpdateVisitor;
+    BaseDataBundle dataBundle;
     /*内部使用数据*/
 }

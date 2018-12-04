@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.virtualightning.library.universalview.Mediator;
-
 /**
  * Created by CimZzz on 2018/12/3.<br>
  * Project Name : YIQIMMM<br>
@@ -13,5 +11,17 @@ import com.virtualightning.library.universalview.Mediator;
  * Description:<br>
  */
 interface IViewMode {
-    View createRootView(Context context, ViewGroup parent);
+    void createRootView(Context context, ViewGroup parent);
+
+    View getRootView();
+
+    void updateHeaderData();
+
+    void updateContentData();
+
+    void append(int appendCount, boolean isOver);
+
+    void updateHeaderData(int position, int viewType, Object arg);
+
+    void updateContentData(int position, Object arg);
 }

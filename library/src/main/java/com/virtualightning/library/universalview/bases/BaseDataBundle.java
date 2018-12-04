@@ -1,4 +1,4 @@
-package com.virtualightning.library.universalview;
+package com.virtualightning.library.universalview.bases;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,11 +10,11 @@ import java.util.List;
  * Since : UniversalView_0.0.1<br>
  * Description:<br>
  */
-public class InnerDataBundle {
-    List<Serializable> headerList;
-    List<Serializable> contentList;
+public class BaseDataBundle {
+    public List<Serializable> headerList;
+    public List<Serializable> contentList;
 
-    InnerDataBundle() {
+    public BaseDataBundle() {
         headerList = new ArrayList<>();
         contentList = new ArrayList<>();
     }

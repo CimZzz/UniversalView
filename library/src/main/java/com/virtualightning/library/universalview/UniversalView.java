@@ -28,7 +28,6 @@ public class UniversalView extends FrameLayout {
 
     private View loadingView;
     private View errorView;
-    private CustomCoordinatorLayout rootView;
 
     private Mediator mediator;
 
@@ -144,13 +143,32 @@ public class UniversalView extends FrameLayout {
     }
 
     private void showContentView() {
+        if(mediator.viewMode == null) {
+            mediator.viewMode = new AllMode(mediator);
+            mediator.viewMode.createRootView(getContext(), this);
+        }
 
+        View rootView = mediator.viewMode.getRootView();
+        if(rootView == null)
+            return;
+
+        if(rootView.getParent() != null)
+            return;
+
+        addView(rootView);
     }
 
-    private void initContentView() {
-        if(rootView == null) {
-            rootView = (CustomCoordinatorLayout) LayoutInflater.from(this.mediator.context).inflate(R.layout.view_universal_view_content, this, false);
-            rootView.setAllowRefresh(this.mediator.innerParams.isAllowPullRefresh);
-        }
+    private void removeContentView() {
+        if(mediator.viewMode == null)
+            return;
+
+        View rootView = mediator.viewMode.getRootView();
+        if(rootView == null)
+            return;
+
+        if(rootView.getParent() == null)
+            return;
+
+        removeView(rootView);
     }
 }

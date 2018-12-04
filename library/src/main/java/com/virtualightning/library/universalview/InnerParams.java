@@ -1,7 +1,9 @@
 package com.virtualightning.library.universalview;
 
 import com.virtualightning.library.universalview.bases.BaseViewPicker;
+import com.virtualightning.library.universalview.interfaces.IDataUpdateVisitor;
 import com.virtualightning.library.universalview.interfaces.ILayoutManagerGenerator;
+import com.virtualightning.library.universalview.interfaces.IPreloadStrategyGenerator;
 import com.virtualightning.library.universalview.interfaces.ISplitDecorationGenerator;
 import com.virtualightning.library.universalview.interfaces.IUniversalRequestCallback;
 
@@ -16,9 +18,6 @@ import java.util.List;
  */
 class InnerParams {
     /*Callback*/
-    ISplitDecorationGenerator splitDecorationGenerator;
-    IUniversalRequestCallback universalRequestCallback;
-    ILayoutManagerGenerator layoutManagerGenerator;
 
 
 

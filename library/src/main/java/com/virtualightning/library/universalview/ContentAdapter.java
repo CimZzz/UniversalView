@@ -26,6 +26,34 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.preloadStrategy = preloadStrategy;
     }
 
+    public void update() {
+        int count = getItemCount();
+        this.preloadStrategy.setChecked(false);
+        this.preloadStrategy.setOver(false);
+        if(count == 0)
+            this.preloadStrategy.setOver(true);
+        else this.preloadStrategy.initItemCount(count);
+        notifyDataSetChanged();
+    }
+
+    public void append(int appendCount, boolean isOver) {
+        if(isOver)
+            this.preloadStrategy.setOver(true);
+        if(appendCount != -1)
+            notifyItemRangeInserted(this.mediator.dataBundle.contentList.size(), appendCount);
+    }
+
+    public void updateContentData(int position, Object arg) {
+        if(this.mediator.
+                dataUpdateVisitor == null)
+            return;
+
+        if(position == -1 || position >= getItemCount())
+            return;
+
+        this.mediator.dataUpdateVisitor.update(getItemViewType(position), getData(position), arg);
+        notifyItemChanged(position);
+    }
 
     /* Implementation */
 
@@ -48,7 +76,7 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if(this.viewPicker == null)
             return 0;
 
-        return this.mediator.innerDataBundle.contentList.size();
+        return this.mediator.dataBundle.contentList.size();
     }
 
     @Override
@@ -57,7 +85,6 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private Serializable getData(int position) {
-        return position >= getItemCount() - 1 ? null : this.mediator.innerDataBundle.contentList.get(position);
+        return position >= getItemCount() - 1 ? null : this.mediator.dataBundle.contentList.get(position);
     }
-
 }

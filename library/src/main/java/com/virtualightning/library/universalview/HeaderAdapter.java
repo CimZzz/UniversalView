@@ -21,12 +21,50 @@ public class HeaderAdapter extends LazyLoadToolkit.Adapter{
     }
 
 
+    public void updateHeaderData(int position, int viewType, Object arg) {
+        if(this.mediator.dataUpdateVisitor == null)
+            return;
+
+        int itemCount = getItemCount();
+        if(position != -1) {
+            if(position >= itemCount)
+                return;
+
+            Object data = getData(position);
+
+            if(viewType != getItemDataType(data, position))
+                return;
+
+            LazyLoadToolkit.ViewController<?> controller = getViewController(position);
+            if(controller == null)
+                return;
+
+            this.mediator.dataUpdateVisitor.update(viewType, data, arg);
+            notifyDataChangedAt(controller);
+        }
+        else {
+            for(int i = 0 ; i < itemCount ; i ++) {
+                Object data = getData(position);
+
+                if(viewType == getItemDataType(data, position)) {
+                    LazyLoadToolkit.ViewController<?> controller = getViewController(position);
+                    if(controller == null)
+                        return;
+
+                    this.mediator.dataUpdateVisitor.update(viewType, data, arg);
+                    notifyDataChangedAt(controller);
+                    return;
+                }
+            }
+        }
+    }
+
 
     /* Implementation */
 
     @Override
     public Object getData(int position) {
-        return this.mediator.innerDataBundle.headerList.get(position);
+        return this.mediator.dataBundle.headerList.get(position);
     }
 
     @Override
@@ -34,7 +72,7 @@ public class HeaderAdapter extends LazyLoadToolkit.Adapter{
         if(this.viewPicker == null)
             return 0;
 
-        return this.mediator.innerDataBundle.headerList.size();
+        return this.mediator.dataBundle.headerList.size();
     }
 
     @Override

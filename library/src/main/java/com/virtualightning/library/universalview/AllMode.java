@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.virtualightning.library.universalview.interfaces.IPreloadStrategyGenerator;
 import com.virtualightning.library.universalview.views.CustomCoordinatorLayout;
 import com.virtualightning.library.universalview.views.LazyLoadAppbarLayout;
 
@@ -32,9 +33,9 @@ public class AllMode implements IViewMode {
     }
 
     @Override
-    public View createRootView(Context context, ViewGroup parent) {
+    public void createRootView(Context context, ViewGroup parent) {
         if(rootView != null)
-            return rootView;
+            return;
 
         rootView = (CustomCoordinatorLayout) LayoutInflater.from(context).inflate(R.layout.view_universal_view_all, parent, false);
         rootView.setAllowRefresh(mediator.isAllowPullRefresh());
@@ -42,25 +43,53 @@ public class AllMode implements IViewMode {
         headerView = rootView.findViewById(R.id.header);
         contentView = rootView.findViewById(R.id.contentList);
 
-        //ViewPicker
-
-
         //header
         headerAdapter = new HeaderAdapter(mediator, this.mediator.viewPicker);
         headerView.setAdapter(headerAdapter);
 
         //list
-        contentView.setAdapter(contentAdapter = new ContentAdapter(this.mediator, this.mediator.viewPicker));
+        IPreloadStrategyGenerator preloadStrategyGenerator = this.mediator.preloadStrategyGenerator;
+        contentView.setAdapter(contentAdapter = new ContentAdapter(this.mediator, this.mediator.viewPicker,
+                preloadStrategyGenerator != null ? preloadStrategyGenerator.generatePreloadStrategy() : null));
 
-        if(this.mediator.innerParams.splitDecorationGenerator != null)
-            contentView.addItemDecoration(this.mediator.innerParams.splitDecorationGenerator.generateSplitDecoration(context));
+        if(this.mediator.splitDecorationGenerator != null)
+            contentView.addItemDecoration(this.mediator.splitDecorationGenerator.generateSplitDecoration(context));
 
-        if(this.mediator.innerParams.layoutManagerGenerator != null)
-            contentView.setLayoutManager(this.mediator.innerParams.layoutManagerGenerator.generateLayoutManager(this.mediator));
+        if(this.mediator.layoutManagerGenerator != null)
+            contentView.setLayoutManager(this.mediator.layoutManagerGenerator.generateLayoutManager(this.mediator));
        else {
             LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             contentView.setLayoutManager(manager);
         }
+    }
+
+    @Override
+    public View getRootView() {
         return rootView;
+    }
+
+    @Override
+    public void updateHeaderData() {
+        headerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateContentData() {
+        contentAdapter.update();
+    }
+
+    @Override
+    public void append(int appendCount, boolean isOver) {
+        contentAdapter.append(appendCount, isOver);
+    }
+
+    @Override
+    public void updateHeaderData(int position, int viewType, Object arg) {
+        headerAdapter.updateHeaderData(position, viewType, arg);
+    }
+
+    @Override
+    public void updateContentData(int position, Object arg) {
+        contentAdapter.updateContentData(position, arg);
     }
 }

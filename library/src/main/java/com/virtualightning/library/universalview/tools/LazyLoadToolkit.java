@@ -252,11 +252,24 @@ public class LazyLoadToolkit {
             toolkit.setAdapter(this);
         }
 
+        public final ViewController<?> getViewController(int position) {
+            if(position >= toolkit.hostView.getChildCount())
+                return null;
+
+            View view = toolkit.hostView.getChildAt(position);
+            return (ViewController<?>) view.getTag(R.id.viewController);
+        }
+
         public final void notifyDataChangedAt(int position) {
             View view = toolkit.hostView.getChildAt(position);
             ViewController<?> controller = (ViewController<?>) view.getTag(R.id.viewController);
             if(controller.isVisible)
                 controller.onVisible(toolkit.hostView);
+        }
+
+        public final void notifyDataChangedAt(ViewController<?> viewController) {
+            if(viewController != null && viewController.isVisible)
+                viewController.onVisible(toolkit.hostView);
         }
 
         public final void notifyRemoveAt(int position) {
@@ -288,7 +301,6 @@ public class LazyLoadToolkit {
         private void setData(Object data) {
             this.data = (T) data;
         }
-
 
         public T getData() {
             return data;
