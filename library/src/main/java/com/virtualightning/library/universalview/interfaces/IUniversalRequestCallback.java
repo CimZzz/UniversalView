@@ -1,6 +1,7 @@
 package com.virtualightning.library.universalview.interfaces;
 
-import com.virtualightning.library.universalview.bases.ResultBundle;
+import com.virtualightning.library.universalview.BaseDataBundle;
+import com.virtualightning.library.universalview.BaseResultBundle;
 
 /**
  * Created by CimZzz on 2018/11/26.<br>
@@ -8,11 +9,12 @@ import com.virtualightning.library.universalview.bases.ResultBundle;
  * Since : UniversalView_0.0.1<br>
  * Description:<br>
  */
-public interface IUniversalRequestCallback<T extends ResultBundle> {
-    T generateResultBundle();
+public interface IUniversalRequestCallback {
+    BaseResultBundle generateResultBundle();
 
-    void doRequest(int refreshType, T resultBundle);
-
+    void doRequest(BaseResultBundle resultBundle);
 
     void cancelRequest(int refreshType);
+
+    void handleResultBundle(BaseResultBundle resultBundle, BaseDataBundle dataBundle);
 }

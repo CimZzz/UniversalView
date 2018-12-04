@@ -2,7 +2,6 @@ package com.virtualightning.library.universalview;
 
 import android.view.ViewGroup;
 
-import com.virtualightning.library.universalview.bases.BaseViewPicker;
 import com.virtualightning.library.universalview.tools.LazyLoadToolkit;
 
 /**
@@ -21,8 +20,8 @@ public class HeaderAdapter extends LazyLoadToolkit.Adapter{
     }
 
 
-    public void updateHeaderData(int position, int viewType, Object arg) {
-        if(this.mediator.dataUpdateVisitor == null)
+    public void updateHeaderData(int position, int viewType, Object arg, boolean isUpdate) {
+        if(this.mediator.viewPicker == null)
             return;
 
         int itemCount = getItemCount();
@@ -39,8 +38,11 @@ public class HeaderAdapter extends LazyLoadToolkit.Adapter{
             if(controller == null)
                 return;
 
-            this.mediator.dataUpdateVisitor.update(viewType, data, arg);
-            notifyDataChangedAt(controller);
+            this.mediator.dataBundle.onUpdateData(true, position, data, arg);
+            controller.setData(arg);
+            if(isUpdate)
+                notifyDataChangedAt(controller);
+
         }
         else {
             for(int i = 0 ; i < itemCount ; i ++) {
@@ -51,8 +53,10 @@ public class HeaderAdapter extends LazyLoadToolkit.Adapter{
                     if(controller == null)
                         return;
 
-                    this.mediator.dataUpdateVisitor.update(viewType, data, arg);
-                    notifyDataChangedAt(controller);
+                    this.mediator.dataBundle.onUpdateData(true, position, data, arg);
+                    controller.setData(arg);
+                    if(isUpdate)
+                        notifyDataChangedAt(controller);
                     return;
                 }
             }
@@ -82,6 +86,10 @@ public class HeaderAdapter extends LazyLoadToolkit.Adapter{
 
     @Override
     public LazyLoadToolkit.ViewController createViewController(ViewGroup parent, int position, int dataType) {
-        return viewPicker.onHeaderCreate(parent, position, dataType);
+        LazyLoadToolkit.ViewController controller = viewPicker.onHeaderCreate(parent, position, dataType);
+        if(controller instanceof BaseViewController)
+            ((BaseViewController) controller).callback = mediator.itemViewCallback;
+
+        return controller;
     }
 }

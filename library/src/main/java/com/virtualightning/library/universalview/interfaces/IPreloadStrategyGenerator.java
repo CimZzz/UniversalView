@@ -1,6 +1,6 @@
 package com.virtualightning.library.universalview.interfaces;
 
-import com.virtualightning.library.universalview.bases.BasePreloadStrategy;
+import com.virtualightning.library.universalview.BasePreloadStrategy;
 
 /**
  * Created by CimZzz on 2018/12/4.<br>

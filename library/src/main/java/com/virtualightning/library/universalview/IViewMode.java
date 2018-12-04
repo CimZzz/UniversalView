@@ -1,6 +1,8 @@
 package com.virtualightning.library.universalview;
 
 import android.content.Context;
+import android.os.Parcelable;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,13 +17,19 @@ interface IViewMode {
 
     View getRootView();
 
-    void updateHeaderData();
+    void updateHeader();
 
-    void updateContentData();
+    void updateContent(boolean isOver);
 
     void append(int appendCount, boolean isOver);
 
-    void updateHeaderData(int position, int viewType, Object arg);
+    void updateHeaderData(int position, int viewType, Object arg, boolean isUpdate);
 
-    void updateContentData(int position, Object arg);
+    void updateContentData(int position, Object arg, boolean isOver);
+
+    void expandHeader(boolean isExpand);
+
+    void contentScrollTo(int position);
+
+    SparseArray<Parcelable> getStatedState();
 }

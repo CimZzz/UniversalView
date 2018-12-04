@@ -4,9 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.virtualightning.library.universalview.bases.BasePreloadStrategy;
-import com.virtualightning.library.universalview.bases.BaseViewPicker;
-
 import java.io.Serializable;
 
 /**
@@ -24,35 +21,48 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.mediator = mediator;
         this.viewPicker = viewPicker;
         this.preloadStrategy = preloadStrategy;
+        if(this.preloadStrategy != null)
+            this.preloadStrategy.setCallback(new BasePreloadStrategy.ICallback() {
+                @Override
+                public void onPreload() {
+                    ContentAdapter.this.mediator.preloadPage();
+                }
+            });
     }
 
-    public void update() {
+    public void update(boolean isOver) {
         int count = getItemCount();
-        this.preloadStrategy.setChecked(false);
-        this.preloadStrategy.setOver(false);
-        if(count == 0)
-            this.preloadStrategy.setOver(true);
-        else this.preloadStrategy.initItemCount(count);
+        if(this.preloadStrategy != null) {
+            this.preloadStrategy.setChecked(false);
+            this.preloadStrategy.setOver(isOver);
+            if (count == 0)
+                this.preloadStrategy.setOver(true);
+            else this.preloadStrategy.initItemCount(count);
+        }
         notifyDataSetChanged();
     }
 
     public void append(int appendCount, boolean isOver) {
-        if(isOver)
-            this.preloadStrategy.setOver(true);
+        if(this.preloadStrategy != null) {
+            this.preloadStrategy.receiverItemCount(appendCount);
+            this.preloadStrategy.setChecked(false);
+            if(isOver)
+                this.preloadStrategy.setOver(true);
+        }
         if(appendCount != -1)
             notifyItemRangeInserted(this.mediator.dataBundle.contentList.size(), appendCount);
     }
 
-    public void updateContentData(int position, Object arg) {
-        if(this.mediator.
-                dataUpdateVisitor == null)
+    public void updateContentData(int position, Object arg, boolean isUpdate) {
+        if(this.mediator.viewPicker == null)
             return;
 
         if(position == -1 || position >= getItemCount())
             return;
 
-        this.mediator.dataUpdateVisitor.update(getItemViewType(position), getData(position), arg);
-        notifyItemChanged(position);
+        this.mediator.dataBundle.onUpdateData(false, position, getData(position), arg);
+        if(isUpdate)
+            notifyItemChanged(position);
     }
 
     /* Implementation */
@@ -60,7 +70,11 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return this.viewPicker.onContentCreate(parent, viewType);
+        RecyclerView.ViewHolder holder = this.viewPicker.onContentCreate(parent, viewType);
+        if(holder instanceof BaseViewHolder)
+            ((BaseViewHolder) holder).callback = mediator.itemViewCallback;
+
+        return holder;
     }
 
     @Override
@@ -68,7 +82,7 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int viewType = holder.getItemViewType();
         this.viewPicker.onContentBind(holder, viewType, getData(position));
         if(this.preloadStrategy != null)
-            this.preloadStrategy.checkPreload(position);
+            this.preloadStrategy.check(position);
     }
 
     @Override
@@ -85,6 +99,6 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private Serializable getData(int position) {
-        return position >= getItemCount() - 1 ? null : this.mediator.dataBundle.contentList.get(position);
+        return position >= getItemCount() ? null : this.mediator.dataBundle.contentList.get(position);
     }
 }

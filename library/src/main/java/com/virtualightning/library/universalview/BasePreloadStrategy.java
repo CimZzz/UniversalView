@@ -1,4 +1,4 @@
-package com.virtualightning.library.universalview.bases;
+package com.virtualightning.library.universalview;
 
 import com.virtualightning.library.universalview.Mediator;
 
@@ -23,6 +23,7 @@ public abstract class BasePreloadStrategy {
 
         if(checkPreload(position)) {
             setChecked(true);
+            callback.onPreload();
         }
     }
 
@@ -39,6 +40,6 @@ public abstract class BasePreloadStrategy {
     public abstract boolean checkPreload(int position);
 
     public interface ICallback {
-        void onPreload(Mediator mediator);
+        void onPreload();
     }
 }

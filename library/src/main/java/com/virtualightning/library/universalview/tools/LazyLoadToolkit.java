@@ -298,7 +298,7 @@ public class LazyLoadToolkit {
             return position;
         }
 
-        private void setData(Object data) {
+        public void setData(Object data) {
             this.data = (T) data;
         }
 

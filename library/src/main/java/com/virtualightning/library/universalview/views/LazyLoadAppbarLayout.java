@@ -6,6 +6,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.OverScroller;
 
@@ -60,19 +62,28 @@ public class LazyLoadAppbarLayout extends AppBarLayout implements CoordinatorLay
 
 
     private static class FlingBehavior extends AppBarLayout.Behavior {
+        private RecyclerView recyclerView;
         private OverScroller overScroller;
 
         public FlingBehavior() {
         }
 
         @Override
+        public boolean onTouchEvent(CoordinatorLayout parent, AppBarLayout child, MotionEvent ev) {
+            if(ev.getAction() != 3 && recyclerView != null)
+                recyclerView.stopScroll();
+            return super.onTouchEvent(parent, child, ev);
+        }
+
+        @Override
         public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child, View target, float velocityX, float velocityY, boolean consumed) {
             if (target instanceof RecyclerView) {
-                final RecyclerView recyclerView = (RecyclerView) target;
+                recyclerView = (RecyclerView) target;
                 consumed = velocityY > 0 || recyclerView.computeVerticalScrollOffset() > 0;
             }
             return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
         }
+
 
         @Override
         public void onNestedScrollAccepted(@NonNull CoordinatorLayout coordinatorLayout, @NonNull AppBarLayout child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {

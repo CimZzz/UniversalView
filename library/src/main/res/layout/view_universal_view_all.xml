@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.yiqimmm.apps.android.base.widgets.goods.LazyLoadAppbarLayout
+    <com.virtualightning.library.universalview.views.LazyLoadAppbarLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

@@ -1,8 +1,11 @@
 package com.virtualightning.library.universalview;
 
 import android.content.Context;
+import android.os.Parcelable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +41,6 @@ public class AllMode implements IViewMode {
             return;
 
         rootView = (CustomCoordinatorLayout) LayoutInflater.from(context).inflate(R.layout.view_universal_view_all, parent, false);
-        rootView.setAllowRefresh(mediator.isAllowPullRefresh());
 
         headerView = rootView.findViewById(R.id.header);
         contentView = rootView.findViewById(R.id.contentList);
@@ -55,12 +57,19 @@ public class AllMode implements IViewMode {
         if(this.mediator.splitDecorationGenerator != null)
             contentView.addItemDecoration(this.mediator.splitDecorationGenerator.generateSplitDecoration(context));
 
+        RecyclerView.LayoutManager layoutManager;
         if(this.mediator.layoutManagerGenerator != null)
-            contentView.setLayoutManager(this.mediator.layoutManagerGenerator.generateLayoutManager(this.mediator));
-       else {
-            LinearLayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-            contentView.setLayoutManager(manager);
-        }
+            layoutManager = this.mediator.layoutManagerGenerator.generateLayoutManager(this.mediator);
+       else layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+
+       if(layoutManager instanceof GridLayoutManager)
+           ((GridLayoutManager) layoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+               @Override
+               public int getSpanSize(int position) {
+                   return mediator.viewPicker.getContentSpanSize(contentAdapter.getItemViewType(position));
+               }
+           });
+       contentView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -69,13 +78,13 @@ public class AllMode implements IViewMode {
     }
 
     @Override
-    public void updateHeaderData() {
+    public void updateHeader() {
         headerAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void updateContentData() {
-        contentAdapter.update();
+    public void updateContent(boolean isOver) {
+        contentAdapter.update(isOver);
     }
 
     @Override
@@ -84,12 +93,29 @@ public class AllMode implements IViewMode {
     }
 
     @Override
-    public void updateHeaderData(int position, int viewType, Object arg) {
-        headerAdapter.updateHeaderData(position, viewType, arg);
+    public void updateHeaderData(int position, int viewType, Object arg, boolean isUpdate) {
+        headerAdapter.updateHeaderData(position, viewType, arg, isUpdate);
     }
 
     @Override
-    public void updateContentData(int position, Object arg) {
-        contentAdapter.updateContentData(position, arg);
+    public void updateContentData(int position, Object arg, boolean isUpdate) {
+        contentAdapter.updateContentData(position, arg, isUpdate);
+    }
+
+    @Override
+    public void expandHeader(boolean isExpand) {
+        headerView.setExpanded(isExpand);
+    }
+
+    @Override
+    public void contentScrollTo(int position) {
+        contentView.getLayoutManager().scrollToPosition(position);
+    }
+
+    @Override
+    public SparseArray<Parcelable> getStatedState() {
+        SparseArray<Parcelable> sparseArray = new SparseArray<>();
+        rootView.saveHierarchyState(sparseArray);
+        return sparseArray;
     }
 }

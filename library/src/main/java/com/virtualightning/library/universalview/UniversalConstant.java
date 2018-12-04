@@ -12,11 +12,14 @@ public final class UniversalConstant {
     public static final int REFRESH_CONTENT = 1;//内容来源-刷新内容
     public static final int REFRESH_PAGE = 2;//内容来源-加载页数据
 
+    /*View 显示状态*/
+    public static final int VIEW_STATE_LOADING = 1;//显示状态-加载中
+    public static final int VIEW_STATE_CONTENT = 2;//显示状态-内容
+    public static final int VIEW_STATE_ERROR = 3;//显示状态-加载失败
 
     public static final int LAYOUT_ALL = 0;
     public static final int LAYOUT_HEADER = 1;
     public static final int LAYOUT_CONTENT = 2;
-
 
     private UniversalConstant() { }
 }

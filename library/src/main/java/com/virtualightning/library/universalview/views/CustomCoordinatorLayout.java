@@ -1,6 +1,7 @@
 package com.virtualightning.library.universalview.views;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
