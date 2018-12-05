@@ -2,11 +2,10 @@ package com.virtualightning.library.universalview;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.SparseArray;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by CimZzz on 2018/12/4.<br>
@@ -16,18 +15,21 @@ import java.util.List;
  */
 class SavedStated implements Parcelable {
     Parcelable originalStated;
-    SparseArray<Parcelable> modeStated;
     int viewState;
     List<Serializable> headerList;
     List<Serializable> contentList;
-    List<Object> objectList;
+    Map<String, Object> objectMap;
 
     SavedStated() {
 
     }
 
     SavedStated(Parcel in) {
-
+        originalStated = in.readParcelable(getClass().getClassLoader());
+        viewState = in.readInt();
+        headerList = in.readArrayList(getClass().getClassLoader());
+        contentList = in.readArrayList(getClass().getClassLoader());
+        objectMap = in.readHashMap(getClass().getClassLoader());
     }
 
     public static final Creator<SavedStated> CREATOR = new Creator<SavedStated>() {
@@ -50,8 +52,9 @@ class SavedStated implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(originalStated, 0);
-        dest.writeParcelable(modeStated, 0);
         dest.writeInt(viewState);
-        dest.writeMap(objectHashMap);
+        dest.writeList(headerList);
+        dest.writeList(contentList);
+        dest.writeMap(objectMap);
     }
 }

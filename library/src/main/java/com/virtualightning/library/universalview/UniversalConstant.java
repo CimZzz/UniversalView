@@ -13,6 +13,7 @@ public final class UniversalConstant {
     public static final int REFRESH_PAGE = 2;//内容来源-加载页数据
 
     /*View 显示状态*/
+    public static final int VIEW_STATE_DEFAULT = 0;//显示状态-默认状态
     public static final int VIEW_STATE_LOADING = 1;//显示状态-加载中
     public static final int VIEW_STATE_CONTENT = 2;//显示状态-内容
     public static final int VIEW_STATE_ERROR = 3;//显示状态-加载失败

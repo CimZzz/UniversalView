@@ -6,6 +6,8 @@ import com.virtualightning.library.universalview.Mediator;
 import com.virtualightning.library.universalview.UniversalConstant;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by CimZzz on 2018/12/4.<br>
@@ -14,6 +16,11 @@ import java.io.Serializable;
  * Description:<br>
  */
 public class ExtendDataBundle extends BaseDataBundle {
+    private HashMap<String, Object> otherMap;
+
+    public ExtendDataBundle() {
+        otherMap = new HashMap<>();
+    }
 
     @Override
     public void onUpdateData(boolean isHeaderList, int position, Object data, Object arg) {
@@ -83,4 +90,27 @@ public class ExtendDataBundle extends BaseDataBundle {
                 break;
         }
     }
+
+
+    @Override
+    public void setValue(String key, Object value) {
+        otherMap.put(key, value);
+    }
+
+    @Override
+    public Object getValue(String key) {
+        return otherMap.get(key);
+    }
+
+    @Override
+    public Map<String, Object> onSaveInstanceState() {
+        return otherMap;
+    }
+
+    @Override
+    public void onRestoreInstance(Map<String, Object> objectMap) {
+        otherMap.clear();
+        otherMap.putAll(objectMap);
+    }
 }
+

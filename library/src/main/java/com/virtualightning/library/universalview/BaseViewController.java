@@ -21,4 +21,6 @@ public abstract class BaseViewController<T, E extends IItemViewCallback> extends
     protected E getCallback() {
         return this.callback;
     }
+
+    protected Mediator getMediator() {return this.callback.getMediator(); }
 }

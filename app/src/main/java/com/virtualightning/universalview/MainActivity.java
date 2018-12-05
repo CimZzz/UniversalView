@@ -36,17 +36,9 @@ public class MainActivity extends AppCompatActivity {
                 .universalRequestCallback(new UniversalRequestCallbackImpl())
                 .dataBundle(new ExtendDataBundle())
                 .viewPicker(new ExtendViewPicker())
-                .itemViewCallback(new BaseItemViewCallback() {
-                    @Override
-                    public void onClick(int viewType, Object... args) {
-                        if((Boolean) args[1])
-                            getMediator().updateHeaderData((Integer) args[0], viewType, "Hello World!");
-                        else getMediator().updateContentData((Integer) args[0], "Hello World!");
-                    }
-                })
+                .itemViewCallback(new ItemViewCallbackImpl())
         );
 
-        universalView.refreshAll(true);
     }
 
     public void onAllowUpdateClick(View view) {

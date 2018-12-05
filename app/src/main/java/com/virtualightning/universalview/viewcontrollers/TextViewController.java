@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.virtualightning.library.universalview.BaseItemViewCallback;
 import com.virtualightning.library.universalview.BaseViewController;
+import com.virtualightning.library.universalview.UniversalView;
+import com.virtualightning.library.universalview.interfaces.IViewOperatorCallback;
 import com.virtualightning.library.universalview.tools.LazyLoadToolkit;
 
 import java.util.HashMap;
@@ -37,7 +39,9 @@ public class TextViewController extends BaseViewController<String, BaseItemViewC
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getCallback().onClick(getDataType(), getPosition(), true);
+                boolean check = getMediator().getValue("key", true);
+                getMediator().setValue("key", !check);
+                getCallback().onClick(getDataType(), getPosition(), true, check);
             }
         });
         return textView;

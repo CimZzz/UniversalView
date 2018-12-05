@@ -1,5 +1,7 @@
 package com.virtualightning.library.universalview.interfaces;
 
+import com.virtualightning.library.universalview.Mediator;
+
 /**
  * Created by CimZzz on 2018/12/4.<br>
  * Project Name : UniversalView<br>
@@ -7,5 +9,7 @@ package com.virtualightning.library.universalview.interfaces;
  * Description:<br>
  */
 public interface IItemViewCallback {
+    Mediator getMediator();
+
     void onClick(int viewType, Object... args);
 }

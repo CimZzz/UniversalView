@@ -21,4 +21,6 @@ public abstract class BaseViewHolder<E extends IItemViewCallback> extends Recycl
     protected E getCallback() {
         return this.callback;
     }
+
+    protected Mediator getMediator() {return this.callback.getMediator(); }
 }

@@ -30,6 +30,4 @@ interface IViewMode {
     void expandHeader(boolean isExpand);
 
     void contentScrollTo(int position);
-
-    SparseArray<Parcelable> getStatedState();
 }

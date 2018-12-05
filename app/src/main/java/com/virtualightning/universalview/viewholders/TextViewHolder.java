@@ -28,7 +28,9 @@ public class TextViewHolder extends BaseViewHolder<BaseItemViewCallback> {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getCallback().onClick(getItemViewType(), getAdapterPosition(), false);
+                boolean check = getMediator().getValue("key", true);
+                getMediator().setValue("key", !check);
+                getCallback().onClick(getItemViewType(), getAdapterPosition(), false, check);
             }
         });
     }

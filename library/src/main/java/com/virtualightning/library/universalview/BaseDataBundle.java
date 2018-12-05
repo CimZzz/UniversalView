@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by CimZzz on 2018/12/3.<br>
@@ -26,11 +27,19 @@ public class BaseDataBundle {
         return headerList.size() == 0 && contentList.size() == 0;
     }
 
-    public List<Object> onSaveInstanceState() {
+    public void setValue(String key, Object value) {
+
+    }
+
+    public Object getValue(String key) {
         return null;
     }
 
-    public void onRestoreInstance(List<Object> objects) {
+    public Map<String, Object> onSaveInstanceState() {
+        return null;
+    }
+
+    public void onRestoreInstance(Map<String, Object> objectMap) {
 
     }
 

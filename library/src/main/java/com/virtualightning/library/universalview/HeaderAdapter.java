@@ -31,7 +31,7 @@ public class HeaderAdapter extends LazyLoadToolkit.Adapter{
 
             Object data = getData(position);
 
-            if(viewType != getItemDataType(data, position))
+            if(viewType != -1 && viewType != getItemDataType(data, position))
                 return;
 
             LazyLoadToolkit.ViewController<?> controller = getViewController(position);

@@ -1,18 +1,14 @@
 package com.virtualightning.library.universalview;
 
-import android.app.AppOpsManager;
 import android.content.Context;
-import android.os.Binder;
-import android.os.Process;
-import android.support.v4.app.AppOpsManagerCompat;
 
 import com.virtualightning.library.universalview.interfaces.IItemViewCallback;
 import com.virtualightning.library.universalview.interfaces.ILayoutManagerGenerator;
 import com.virtualightning.library.universalview.interfaces.IPreloadStrategyGenerator;
 import com.virtualightning.library.universalview.interfaces.ISplitDecorationGenerator;
 import com.virtualightning.library.universalview.interfaces.IUniversalRequestCallback;
+import com.virtualightning.library.universalview.interfaces.IViewOperatorCallback;
 
-import java.util.List;
 
 /**
  * Created by CimZzz on 2018/11/26.<br>
@@ -107,6 +103,27 @@ public class Mediator {
             innerParams.isOver = isOver;
         }
     }
+    public void setValue(String key, Object value) {
+        dataBundle.setValue(key, value);
+    }
+
+    public Object getValue(String key) {
+        return dataBundle.getValue(key);
+    }
+
+    public <T> T getValue(String key, T defaultValue) {
+        Object value = dataBundle.getValue(key);
+        if(value == null && defaultValue == null)
+            return null;
+        else if(value == null)
+            return defaultValue;
+        else if(defaultValue != null) {
+            if (defaultValue.getClass().equals(value.getClass()))
+                return (T) value;
+            else return null;
+        }
+        else return (T) value;
+    }
 
     public void updateHeaderData(int position, int viewType, Object arg) {
         if(viewMode == null)
@@ -124,6 +141,20 @@ public class Mediator {
         viewMode.updateContentData(position, arg, innerParams.isAllowUpdateImmediately);
         if(!innerParams.isAllowUpdateImmediately)
             innerParams.isNeedUpdateContent = true;
+    }
+
+    public void attachView(IViewOperatorCallback viewOperatorCallback) {
+        if(viewOperatorCallback == null)
+            return;
+
+        viewOperatorCallback.onAttachView(universalView);
+    }
+
+    public void detachView(IViewOperatorCallback viewOperatorCallback) {
+        if(viewOperatorCallback == null)
+            return;
+
+        viewOperatorCallback.onDetachView(universalView);
     }
 
     public Context getContext() {
@@ -168,24 +199,45 @@ public class Mediator {
         requestResolver.handleResultBundle(baseResultBundle);
     }
 
-    void saveInstanceState(SavedStated savedStated) {
-        savedStated.viewState = innerState.viewState;
-        if(innerState.viewState != UniversalConstant.VIEW_STATE_ERROR && dataBundle != null && !dataBundle.isEmpty()) {
-            savedStated.headerList = dataBundle.headerList;
-            savedStated.headerList = dataBundle.contentList;
-            savedStated.objectList = dataBundle.onSaveInstanceState();
-
-            if(viewMode != null)
-                savedStated.modeStated = viewMode.getStatedState();
-
-        }
-    }
-
     boolean checkCompleted(BaseResultBundle resultBundle) {
         if(!requestResolver.checkResultBundleValid(resultBundle))
             return false;
 
         requestResolver.completed(resultBundle);
         return true;
+    }
+
+    void saveInstanceState(SavedStated savedStated) {
+        savedStated.viewState = innerState.viewState;
+        if(innerState.viewState == UniversalConstant.VIEW_STATE_CONTENT &&
+                dataBundle != null &&
+                !dataBundle.isEmpty()) {
+            savedStated.headerList = dataBundle.headerList;
+            savedStated.contentList = dataBundle.contentList;
+            savedStated.objectMap = dataBundle.onSaveInstanceState();
+        }
+        else if(innerState.viewState == UniversalConstant.VIEW_STATE_CONTENT)
+            savedStated.viewState = UniversalConstant.VIEW_STATE_LOADING;
+    }
+
+    void restoreInstanceState(SavedStated savedStated) {
+        int viewState = savedStated.viewState;
+        switch (viewState) {
+            case UniversalConstant.VIEW_STATE_LOADING:
+                setViewState(viewState);
+                refreshAll(true);
+                break;
+
+            case UniversalConstant.VIEW_STATE_ERROR:
+                setViewState(viewState);
+                break;
+
+            case UniversalConstant.VIEW_STATE_CONTENT:
+                dataBundle.headerList = savedStated.headerList;
+                dataBundle.contentList = savedStated.contentList;
+                dataBundle.onRestoreInstance(savedStated.objectMap);
+                setViewState(viewState);
+                break;
+        }
     }
 }

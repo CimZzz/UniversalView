@@ -111,11 +111,4 @@ public class AllMode implements IViewMode {
     public void contentScrollTo(int position) {
         contentView.getLayoutManager().scrollToPosition(position);
     }
-
-    @Override
-    public SparseArray<Parcelable> getStatedState() {
-        SparseArray<Parcelable> sparseArray = new SparseArray<>();
-        rootView.saveHierarchyState(sparseArray);
-        return sparseArray;
-    }
 }

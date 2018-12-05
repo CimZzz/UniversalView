@@ -94,7 +94,6 @@ public class UniversalView extends FrameLayout {
             this.mediator.setAllowUpdateImmediately(allowUpdateImmediately);
     }
 
-
     @Nullable
     @Override
     protected Parcelable onSaveInstanceState() {
@@ -106,7 +105,9 @@ public class UniversalView extends FrameLayout {
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
+        SavedStated savedStated = (SavedStated) state;
+        super.onRestoreInstanceState(savedStated.originalStated);
+        mediator.restoreInstanceState(savedStated);
     }
 
     /*控件显示方法*/
